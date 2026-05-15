@@ -33,6 +33,8 @@ public class ArvoreBinaria {
 ////                } else {
 ////                    System.out.println("Não são permitidos nós repetidos na árvore binária. O " + novoNo.getConteudo() + " já existe na árvore.");
 ////                    return;
+/// 
+///                     //eu sou um viado 
 ////                }
 //            }
 //        }
