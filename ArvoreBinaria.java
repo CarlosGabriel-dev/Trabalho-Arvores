@@ -32,9 +32,7 @@ public class ArvoreBinaria {
 ////                    }
 ////                } else {
 ////                    System.out.println("Não são permitidos nós repetidos na árvore binária. O " + novoNo.getConteudo() + " já existe na árvore.");
-////                    return;
-/// 
-///                     //eu sou um viado 
+////                    return; 
 ////                }
 //            }
 //        }
@@ -87,7 +85,7 @@ public class ArvoreBinaria {
             System.out.println("A árvore não existe.");
             return;
         }
-
+        
         switch (percurso) {
             case("Pre"):
                 System.out.println("Executando a árvore em pré ordem.");
@@ -104,7 +102,6 @@ public class ArvoreBinaria {
             default:
                 System.out.println("Percurso inexistente!");
                 break;
-
         }
     }
 
@@ -140,90 +137,114 @@ public class ArvoreBinaria {
             System.out.println("A árvore não existe.");
             return;
         }
-        buascarNo(conteudo, this.raiz);
+        buscarNo(conteudo, this.raiz);
     }
 
-    private void buascarNo(Integer conteudo, No no) {
-        if(no == null) {
-            return;
+    private No buscarNo(Integer conteudo, No no) {
+        while (no != null) {
+            // ENCONTROU
+            if (conteudo.equals(no.getConteudo())) {
+                return no;
+            }
+            // MENOR -> ESQUERDA
+            if (conteudo < no.getConteudo()) {
+                no = no.getEsquerda();
+            }
+            // MAIOR -> DIREITA
+            else {
+                no = no.getDireita();
+            }
         }
+        return null;
+    }
 
-        buascarNo(conteudo, no.getDireita());
+    private void identificarTipo(No no){
+        if(no.getEsquerda() == null && no.getDireita() == null){
+            removerNoFolha(no);
+        } else if((no.getEsquerda() != null && no.getDireita() == null) || (no.getEsquerda() == null && no.getDireita() != null)){
+            removerNoFilho(no);
+        } else if(no.getEsquerda() != null && no.getDireita() != null){
+            removerNoDoisFilhos(no);
+        } else {
+            System.out.println("Este valor não está presente na árvore!");
+        }
+    }
+
+    public void buscarEIdentificar(Integer conteudo) {
+        No noEncontrado = buscarNo(conteudo, raiz);
+        if(noEncontrado != null) {
+            identificarTipo(noEncontrado);
+        } else {
+            System.out.println("Este valor não está presente na árvore!");
+        }
     }
 
     //REMOVE A RAIZ A DIREITA E A ESQUERDA 
-    private void noRaiz(No no) {
-        if(no.getConteudo() == this.raiz.getConteudo()) {
-            System.out.println("O nó " + no.getConteudo() + " é a raiz da árvore.");
-            if(no.getEsquerda() == null && no.getDireita() == null){
-                no.setConteudo(null);
-                System.out.println("A raiz da árvore foi removida com sucesso.");
-            } else if (no.getEsquerda() != null && no.getDireita() != null){
-                if(no.getEsquerda().getDireita() == null){
-                    no.setConteudo(no.getEsquerda().getConteudo());
-                    no.setEsquerda(null);
-                } else {
-                    No sucessor = no.getEsquerda();
-                    No antecessor = sucessor;
-                    while(sucessor.getDireita() != null) {
-                        antecessor = sucessor;
-                        sucessor = sucessor.getDireita();
-                    }
-                    no.setConteudo(sucessor.getConteudo());
-                    sucessor.setConteudo(null);
-                    antecessor.setDireita(sucessor.getEsquerda());
-                }
-            } else if (no.getEsquerda() != null && no.getDireita() == null) {
-                no.setConteudo(no.getEsquerda().getConteudo());
-                no.setEsquerda(null);
-            } else if (no.getEsquerda() == null && no.getDireita() != null) {
-                no.setConteudo(no.getDireita().getConteudo());
-                no.setDireita(null);
-            }
-        }
-    }
+    // private void removerNoRaiz(No no) {
+    //     if(no.getConteudo() == this.raiz.getConteudo()) {
+    //         System.out.println("O nó " + no.getConteudo() + " é a raiz da árvore.");
+    //         if(no.getEsquerda() == null && no.getDireita() == null){
+    //             no.setConteudo(null);
+    //             System.out.println("A raiz da árvore foi removida com sucesso.");
+    //         } else if (no.getEsquerda() != null && no.getDireita() != null){
+    //             if(no.getEsquerda().getDireita() == null){
+    //                 no.setConteudo(no.getEsquerda().getConteudo());
+    //                 no.setEsquerda(null);
+    //             } else {
+    //                 No sucessor = no.getEsquerda();
+    //                 No antecessor = sucessor;
+    //                 while(sucessor.getDireita() != null) {
+    //                     antecessor = sucessor;
+    //                     sucessor = sucessor.getDireita();
+    //                 }
+    //                 no.setConteudo(sucessor.getConteudo());
+    //                 sucessor.setConteudo(null);
+    //                 antecessor.setDireita(sucessor.getEsquerda());
+    //             }
+    //         } else if (no.getEsquerda() != null && no.getDireita() == null) {
+    //             no.setConteudo(no.getEsquerda().getConteudo());
+    //             no.setEsquerda(null);
+    //         } else if (no.getEsquerda() == null && no.getDireita() != null) {
+    //             no.setConteudo(no.getDireita().getConteudo());
+    //             no.setDireita(null);
+    //         }
+    //     }
+    // }
 
     //REMOVE NO FOLHA (NO QUE NÃO TENHA FILHOS)
-    private void noFolha(No no) {
-        if(no.getEsquerda() == null && no.getDireita() == null) {
-            System.out.println("O nó " + no.getConteudo() + " é um nó folha.");
-            no.setConteudo(null);
-        }
+    private void removerNoFolha(No no) {
+        System.out.println("O nó " + no.getConteudo() + " é um nó folha.");
+        no.setConteudo(null);
     }
 
     //REMOVE UM NO QUE POSSUI APENAS UM FILHO
-    private void noFilho(No no){
-        if((no.getEsquerda() != null && no.getDireita() == null) || (no.getEsquerda() == null && no.getDireita() != null)) {
-            System.out.println("O nó " + no.getConteudo() + " é um nó filho.");
-            if(no.getEsquerda() != null) {
-                no.setConteudo(no.getEsquerda().getConteudo());
-                no.setEsquerda(null);
-            } else {
-                no.setConteudo(no.getDireita().getConteudo());
-                no.setDireita(null);
-            }
+    private void removerNoFilho(No no){
+        System.out.println("O nó " + no.getConteudo() + " é um nó filho.");
+        if(no.getEsquerda() != null) {
+            no.setConteudo(no.getEsquerda().getConteudo());
+            no.setEsquerda(null);
+        } else {
+            no.setConteudo(no.getDireita().getConteudo());
+            no.setDireita(null);
         }
     }
 
     //INDENTIFICA E REMOVE NO COM DOIS FILHOS
-    private void noDoisFilhos(No no) {
-        if(no.getEsquerda() != null && no.getDireita() != null) {
-            System.out.println("O nó " + no.getConteudo() + " é um nó com dois filhos.");
-            
-            if(no.getEsquerda().getDireita() == null) {
-                no.setConteudo(no.getEsquerda().getConteudo());
-                no.setEsquerda(no.getEsquerda().getEsquerda());
-            } else {
-                No sucessor = no.getEsquerda();
-                No antecessor = sucessor;
-                while(sucessor.getDireita() != null) {
-                    antecessor = sucessor;
-                    sucessor = sucessor.getDireita();
-                }
-                no.setConteudo(sucessor.getConteudo());
-                sucessor.setConteudo(null);
-                antecessor.setDireita(sucessor.getEsquerda());
+    private void removerNoDoisFilhos(No no) {
+        System.out.println("O nó " + no.getConteudo() + " é um nó com dois filhos.");
+        if(no.getEsquerda().getDireita() == null) {
+            no.setConteudo(no.getEsquerda().getConteudo());
+            no.setEsquerda(no.getEsquerda().getEsquerda());
+        } else {
+            No sucessor = no.getEsquerda();
+            No antecessor = sucessor;
+            while(sucessor.getDireita() != null) {
+                antecessor = sucessor;
+                sucessor = sucessor.getDireita();
             }
+            no.setConteudo(sucessor.getConteudo());
+            sucessor.setConteudo(null);
+            antecessor.setDireita(sucessor.getEsquerda());
         }
     }
 }
